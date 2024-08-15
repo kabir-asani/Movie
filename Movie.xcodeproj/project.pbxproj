@@ -25,6 +25,7 @@
 		6356ACB92C6E8A20008AE959 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6356ACC22C6E8BCD008AE959 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		6356ACC42C6E8F3A008AE959 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		636DD7E12C6E93FD001DF60D /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,6 +67,7 @@
 				6356ACB42C6E8A20008AE959 /* Assets.xcassets */,
 				6356ACB62C6E8A20008AE959 /* LaunchScreen.storyboard */,
 				6356ACB92C6E8A20008AE959 /* Info.plist */,
+				636DD7E12C6E93FD001DF60D /* Config.xcconfig */,
 			);
 			path = Movie;
 			sourceTree = "<group>";
@@ -192,6 +194,7 @@
 /* Begin XCBuildConfiguration section */
 		6356ACBA2C6E8A20008AE959 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 636DD7E12C6E93FD001DF60D /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -255,6 +258,7 @@
 		};
 		6356ACBB2C6E8A20008AE959 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 636DD7E12C6E93FD001DF60D /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
