@@ -1,0 +1,15 @@
+{
+  "originHash" : "6c6aab0f30cf6be61bc66f582a3948b22ed27a030841df65c232e4c3bf027637",
+  "pins" : [
+    {
+      "identity" : "silicon",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/kabir-asani/Silicon.git",
+      "state" : {
+        "revision" : "3b833f8f75451f5062d1fbb7fd4297e71346b0ad",
+        "version" : "0.0.2"
+      }
+    }
+  ],
+  "version" : 3
+}
