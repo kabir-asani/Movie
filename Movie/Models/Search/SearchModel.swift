@@ -8,15 +8,19 @@
 import Foundation
 
 struct SearchModel: Codable {
-	let matches: [SearchItemModel]
-	let numberOfPages: Int
+	let results: [SearchItemModel]
+	let count: Int
+	
+	var maximumNumberOfPages: Int {
+		Int(ceil(Double(count) / 10.0))
+	}
 	
 	init(
 		matches: [SearchItemModel],
-		numberOfPages: Int
+		count: Int
 	) {
-		self.matches = matches
-		self.numberOfPages = numberOfPages
+		self.results = matches
+		self.count = count
 	}
 	
 	init(
@@ -25,21 +29,21 @@ struct SearchModel: Codable {
 		let container = try decoder.container(
 			keyedBy: CodingKeys.self
 		)
-		self.matches = try container.decode(
+		self.results = try container.decode(
 			[SearchItemModel].self, 
-			forKey: .matches
+			forKey: .results
 		)
 		
 		let totalResults = try container.decode(
 			String.self,
-			forKey: .numberOfPages
+			forKey: .count
 		)
 		
-		if let numberOfPages = Int(totalResults) {
-			self.numberOfPages = numberOfPages
+		if let count = Int(totalResults) {
+			self.count = count
 		} else {
 			throw DecodingError.dataCorruptedError(
-				forKey: .numberOfPages, 
+				forKey: .count, 
 				in: container, 
 				debugDescription: "`totalResults` should be an Int."
 			)
@@ -47,12 +51,12 @@ struct SearchModel: Codable {
 	}
 	
 	enum CodingKeys: String, CodingKey {
-		case matches = "Search"
-		case numberOfPages = "totalResults"
+		case results = "Search"
+		case count = "totalResults"
 	}
 }
 
-struct SearchItemModel: Identifiable, Codable {
+struct SearchItemModel: Identifiable, Hashable, Codable {
 	let id: String
 	let title: String
 	let poster: URL
