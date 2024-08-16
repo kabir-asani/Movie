@@ -121,11 +121,6 @@ extension MovieViewController {
 				print(json)
 			}
 			
-			let dateFormatter = DateFormatter()
-			dateFormatter.dateFormat = "dd MMM yyyy"
-			
-			decoder.dateDecodingStrategy = .formatted(dateFormatter)
-			
 			let movie = try decoder.decode(
 				MovieModel.self,
 				from: data
