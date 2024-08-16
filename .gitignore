@@ -13,6 +13,7 @@ xcuserdata/
 *.dSYM.zip
 *.dSYM
 Movie/Config.xcconfig
+Movie/Extras/Configuration.swift
 
 ## Playgrounds
 timeline.xctimeline

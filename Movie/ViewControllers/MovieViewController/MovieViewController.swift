@@ -124,11 +124,6 @@ class MovieViewController: UIViewController {
 
 extension MovieViewController {
 	private func fetchMovie() async {
-		guard let omdbAPIKey = Bundle.main.infoDictionary?["OMDB_API_KEY"] else {
-			state = .error
-			return
-		}
-		
 		guard let url = URL(string: "https://www.omdbapi.com?apikey=\(omdbAPIKey)&i=\(movieId)") else {
 			state = .error
 			return

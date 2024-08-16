@@ -370,10 +370,6 @@ extension HomeViewController {
 		forSearchText searchText: String,
 		fromPage page: Int
 	) async -> Result<SearchModel, SearchResultsError> {
-		guard let omdbAPIKey = Bundle.main.infoDictionary?["OMDB_API_KEY"] else {
-			return .failure(.unknown)
-		}
-		
 		guard let url = URL(string: "https://www.omdbapi.com?apikey=\(omdbAPIKey)&s=\(searchText)&page=\(page)") else {
 			return .failure(.unknown)
 		}
