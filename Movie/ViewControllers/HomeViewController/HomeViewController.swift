@@ -101,7 +101,7 @@ class HomeViewController: UIViewController {
 		let searchController = UISearchController()
 		searchController.searchResultsUpdater = self
 		searchController.searchBar.delegate = self
-		searchController.searchBar.placeholder = "Search Movies"
+		searchController.searchBar.placeholder = "Search movies"
 		
 		navigationItem.searchController = searchController
 		navigationItem.hidesSearchBarWhenScrolling = false
