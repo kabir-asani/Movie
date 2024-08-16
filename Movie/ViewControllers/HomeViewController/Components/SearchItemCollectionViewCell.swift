@@ -36,7 +36,6 @@ class SearchItemCollectionViewCell: UICollectionViewCell {
 	private func configureContentView() {
 		contentView.clipsToBounds = true
 		contentView.layer.cornerRadius = 8.0
-		contentView.layer.cornerRadius = 8.0
 		contentView.layer.borderWidth = 1.0
 		contentView.layer.borderColor = UIColor.separator.cgColor
 	}

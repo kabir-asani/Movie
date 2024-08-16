@@ -48,6 +48,8 @@ class MovieViewController: UIViewController {
 	}
 	
 	private func configure() {
+		configureNavigationBar()
+		
 		configureView()
 		configureTableView()
 		configureErrorContentView()
@@ -56,11 +58,27 @@ class MovieViewController: UIViewController {
 		configureAppearancesOfEachViewAsPerState()
 	}
 	
+	private func configureNavigationBar() {
+		navigationItem.largeTitleDisplayMode = .never
+	}
+	
 	private func configureView() {
 		view.backgroundColor = .systemBackground
 	}
 	
 	private func configureTableView() {
+		tableView.rowHeight = UITableView.automaticDimension
+		tableView.estimatedRowHeight = 400
+		tableView.allowsSelection = false
+		
+		tableView.dataSource = self
+		tableView.delegate = self
+		tableView.register(
+			MovieTableViewCell.self, 
+			forCellReuseIdentifier: MovieTableViewCell.reuseIdentifier
+		)
+		tableView.separatorStyle = .none
+		
 		tableView.addAsSubview(of: view)
 		tableView.pin(to: view)
 	}
@@ -77,25 +95,29 @@ class MovieViewController: UIViewController {
 	}
 	
 	private func configureAppearancesOfEachViewAsPerState() {
-		switch state {
-		case .undetermined:
-			tableView.hide()
-			errorContentView.hide()
-			activityIndicatorView.startAnimating()
-			activityIndicatorView.show()
-		case .data(let movie):
-			tableView.reloadData()
-			errorContentView.hide()
-			activityIndicatorView.hide()
-			tableView.show()
-		case .error:
-			errorContentView.configure(
-				withImage: UIImage(systemName: "bandage")!,
-				title: "Something went wrong"
-			)
-			tableView.hide()
-			activityIndicatorView.hide()
-			errorContentView.show()
+		DispatchQueue.main.async { [weak self] in
+			guard let `self` = self else { return }
+			
+			switch state {
+			case .undetermined:
+				tableView.hide()
+				errorContentView.hide()
+				activityIndicatorView.startAnimating()
+				activityIndicatorView.show()
+			case .data:
+				errorContentView.hide()
+				activityIndicatorView.hide()
+				tableView.show()
+				tableView.reloadData()
+			case .error:
+				errorContentView.configure(
+					withImage: UIImage(systemName: "bandage")!,
+					title: "Something went wrong"
+				)
+				tableView.hide()
+				activityIndicatorView.hide()
+				errorContentView.show()
+			}
 		}
 	}
 }
@@ -132,4 +154,47 @@ extension MovieViewController {
 			state = .error
 		}
 	}
+}
+
+extension MovieViewController: UITableViewDataSource {
+	func numberOfSections(in tableView: UITableView) -> Int {
+		1
+	}
+	
+	func tableView(
+		_ tableView: UITableView, 
+		numberOfRowsInSection section: Int
+	) -> Int {
+		switch state {
+		case .data:
+			return 1
+		default:
+			return 0
+		}
+	}
+	
+	func tableView(
+		_ tableView: UITableView,
+		cellForRowAt indexPath: IndexPath
+	) -> UITableViewCell {
+		switch state {
+		case .data(movie: let movie):
+			guard let movieTableViewCell = tableView.dequeueReusableCell(
+				withIdentifier: MovieTableViewCell.reuseIdentifier,
+				for: indexPath
+			) as? MovieTableViewCell else {
+				fatalError("Unable to dequeue MovieTableViewCell for identifier: \(MovieTableViewCell.reuseIdentifier)")
+			}
+		
+			movieTableViewCell.configure(withMovie: movie)
+			
+			return movieTableViewCell
+		default:
+			fatalError("Empty state has no rows to dequeue.")
+		}
+	}
+}
+
+extension MovieViewController: UITableViewDelegate {
+	
 }

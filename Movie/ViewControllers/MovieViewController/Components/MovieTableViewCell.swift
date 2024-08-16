@@ -1,0 +1,133 @@
+//
+//  MovieTableViewCell.swift
+//  Movie
+//
+//  Created by Kabir Asani on 16/08/24.
+//
+
+import UIKit
+
+class MovieTableViewCell: UITableViewCell {
+	static var reuseIdentifier: String {
+		String(describing: Self.self)
+	}
+	
+	private let containerStackView: UIStackView = UIStackView()
+	private let posterImageView: NetworkImageView = NetworkImageView()
+	private let titleLabel: UILabel = UILabel()
+	private let subtitleLabel: UILabel = UILabel()
+	private let plotLabel: UILabel = UILabel()
+	
+	override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+		super.init(style: style, reuseIdentifier: reuseIdentifier)
+		
+		configure()
+	}
+	
+	required init?(coder: NSCoder) {
+		fatalError("init(coder:) has not been implemented")
+	}
+	
+	private func configure() {
+		configureContentView()
+		configureContainerStackView()
+		configurePosterImageView()
+		configureTitleLabel()
+		configureSubtitleLabel()
+		configurePlotLabel()
+	}
+	
+	private func configureContentView() {
+		
+	}
+	
+	private func configureContainerStackView() {
+		containerStackView.axis = .vertical
+		containerStackView.alignment = .center
+		containerStackView.distribution = .fill
+		
+		containerStackView.addArrangedSubview(posterImageView)
+		containerStackView.addArrangedSubview(titleLabel)
+		containerStackView.addArrangedSubview(subtitleLabel)
+		containerStackView.addArrangedSubview(plotLabel)
+		
+		containerStackView.setCustomSpacing(12.0, after: posterImageView)
+		containerStackView.setCustomSpacing(4.0, after: titleLabel)
+		containerStackView.setCustomSpacing(16.0, after: subtitleLabel)
+		
+		containerStackView.addAsSubview(of: contentView)
+		containerStackView.pin(
+			to: contentView,
+			withInsets: .init(
+				top: 8, 
+				left: 8, 
+				bottom: -8, 
+				right: -8
+			)
+		)
+	}
+	
+	private func configurePosterImageView() {
+		posterImageView.imageView.contentMode = .scaleAspectFill
+		posterImageView.clipsToBounds = true
+		posterImageView.layer.cornerRadius = 8.0
+		posterImageView.layer.borderWidth = 1.0
+		posterImageView.layer.borderColor = UIColor.separator.cgColor
+		
+		posterImageView.fixHeight(to: 240)
+		posterImageView.fixWidth(to: 130)
+	}
+	
+	private func configureTitleLabel() {
+		titleLabel.numberOfLines = 0
+		titleLabel.textAlignment = .center
+		titleLabel.font = .systemFont(
+			ofSize: UIFont.preferredFont(forTextStyle: .title2).pointSize,
+			weight: .bold
+		)
+	}
+	
+	private func configureSubtitleLabel() {
+		subtitleLabel.numberOfLines = 0
+		subtitleLabel.textAlignment = .center
+		subtitleLabel.font = .systemFont(
+			ofSize: UIFont.preferredFont(forTextStyle: .subheadline).pointSize,
+			weight: .medium
+		)
+		subtitleLabel.textColor = .secondaryLabel
+	}
+	
+	private func configurePlotLabel() {
+		plotLabel.numberOfLines = 0
+		plotLabel.textAlignment = .center
+		plotLabel.font = .systemFont(
+			ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize,
+			weight: .regular
+		)
+	}
+}
+
+extension MovieTableViewCell {
+	func configure(withMovie movie: MovieModel) {
+		posterImageView.configure(withURL: movie.poster)
+		titleLabel.text = movie.title
+		subtitleLabel.text = "Directed by \(movie.director) • Released on \(movie.releaseDate?.monthYear ?? "Unknown")"
+		plotLabel.text = movie.plot
+	}
+	
+	override func prepareForReuse() {
+		posterImageView.prepareForReuse()
+		titleLabel.text = nil
+		subtitleLabel.text = nil
+		plotLabel.text = nil
+	}
+}
+
+extension Date {
+	var monthYear: String {
+		let dateFormatter = DateFormatter()
+		dateFormatter.dateFormat = "MMMM yyyy"
+		return dateFormatter.string(from: self)
+	}
+}
+

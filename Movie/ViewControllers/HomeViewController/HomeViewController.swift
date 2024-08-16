@@ -105,6 +105,7 @@ class HomeViewController: UIViewController {
 		
 		navigationItem.searchController = searchController
 		navigationItem.hidesSearchBarWhenScrolling = false
+		navigationItem.backButtonTitle = " "
 	}
 	
 	private func configureView() {
