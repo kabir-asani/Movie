@@ -26,8 +26,14 @@ class NetworkImageView: UIView {
 		}.resume()
 	}
 	
+	private var task: URLSessionTask? = nil
+	
 	let imageView = UIImageView()
-	let activityIndicatorView = UIActivityIndicatorView()
+	let placeholderImageView = UIImageView(
+		image: UIImage(
+			systemName: "movieclapper"
+		)
+	)
 	
 	init() {
 		super.init(frame: .zero)
@@ -44,7 +50,7 @@ class NetworkImageView: UIView {
 	private func configure() {
 		configureSelf()
 		configureImageView()
-		configureActivityIndicatorView()
+		configurePlaceholderImageView()
 	}
 	
 	private func configureSelf() {
@@ -52,50 +58,64 @@ class NetworkImageView: UIView {
 	}
 	
 	private func configureImageView() {
-		addSubview(imageView)
-		
+		imageView.addAsSubview(of: self)
 		imageView.pin(to: self)
 	}
 	
-	private func configureActivityIndicatorView() {
-		addSubview(activityIndicatorView)
-		
-		activityIndicatorView.pin(to: self)
+	private func configurePlaceholderImageView() {
+		placeholderImageView.addAsSubview(of: self)
+		placeholderImageView.tintColor = .separator
+		placeholderImageView.contentMode = .scaleAspectFit
+		placeholderImageView.squareOff(withSide: 44.0)
+		placeholderImageView.align(toCenterOf: self)
 	}
 	
 	func configure(withURL url: URL) {
+		task?.cancel()
+		
+		imageView.image = nil
+		placeholderImageView.show()
+		
 		if let cachedImage = Self.imageCache.object(forKey: url as NSURL) {
 			self.imageView.image = cachedImage
+			self.imageView.show()
+			self.placeholderImageView.hide()
 			return
 		}
 		
-		imageView.hide()
-		activityIndicatorView.show()
-		activityIndicatorView.startAnimating()
-		
-		URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
+		task = URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
 			guard let self = self else { return }
 			
-			DispatchQueue.main.async {
-				self.activityIndicatorView.stopAnimating()
-				self.activityIndicatorView.hide()
-			}
-			
-			if error != nil {
-				return
-			}
-			
-			if let data = data, let image = UIImage(data: data) {
-				Self.imageCache.setObject(
-					image,
-					forKey: url as NSURL
-				)
+			DispatchQueue.main.async { [weak self] in
+				guard let `self` = self else { return }
 				
-				DispatchQueue.main.async {
-					self.imageView.image = image
-					self.imageView.show()
+				if error == nil, let data = data, let image = UIImage(data: data) {
+					// Cache the image
+					Self.imageCache.setObject(image, forKey: url as NSURL)
+					
+					// Only set the image if the task is still valid
+					if self.task?.state == .completed {
+						self.placeholderImageView.hide()
+						self.imageView.image = image
+						self.imageView.show()
+					}
+				} else {
+					self.imageView.hide()
+					self.placeholderImageView.show()
 				}
 			}
-		}.resume()
+		}
+		
+		task?.resume()
+	}
+	
+	func prepareForReuse() {
+		task?.cancel()
+		
+		task = nil
+		imageView.image = nil
+		
+		imageView.hide()
+		placeholderImageView.show()
 	}
 }
