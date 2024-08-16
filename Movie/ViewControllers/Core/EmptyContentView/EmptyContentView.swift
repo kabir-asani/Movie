@@ -34,10 +34,6 @@ class EmptyContentView: UIView {
 	}
 	
 	private func configureContainerStackView() {
-		addSubview(containerStackView)
-		
-		containerStackView.pin(to: self)
-		
 		containerStackView.axis = .vertical
 		containerStackView.spacing = 8.0
 		containerStackView.distribution = .fill
@@ -45,12 +41,15 @@ class EmptyContentView: UIView {
 		
 		containerStackView.addArrangedSubview(imageView)
 		containerStackView.addArrangedSubview(titleLabel)
+		
+		containerStackView.addAsSubview(of: self)
+		containerStackView.pin(to: self)
 	}
 	
 	private func configureImageView() {
 		imageView.squareOff(withSide: 75)
 		imageView.contentMode = .scaleAspectFit
-		imageView.tintColor = .label
+		imageView.tintColor = .separator
 	}
 	
 	private func configureTitleLabel() {

@@ -98,9 +98,9 @@
 		6356ACC02C6E8B8A008AE959 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
-				63D202A12C6F38E10073DA87 /* MovieViewController */,
 				638E3EED2C6EAED30015B0A3 /* Core */,
 				6356ACC12C6E8BA2008AE959 /* HomeViewController */,
+				63D202A12C6F38E10073DA87 /* MovieViewController */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -112,6 +112,14 @@
 				6356ACC22C6E8BCD008AE959 /* HomeViewController.swift */,
 			);
 			path = HomeViewController;
+			sourceTree = "<group>";
+		};
+		6358580F2C6F9F8E003D496F /* EmptyContentView */ = {
+			isa = PBXGroup;
+			children = (
+				636469332C6EF9D80096C51D /* EmptyContentView.swift */,
+			);
+			path = EmptyContentView;
 			sourceTree = "<group>";
 		};
 		6382D8D02C6E98CD003DF61A /* Search */ = {
@@ -134,7 +142,6 @@
 			isa = PBXGroup;
 			children = (
 				638E3EEB2C6EAEA70015B0A3 /* SearchItemCollectionViewCell.swift */,
-				636469332C6EF9D80096C51D /* EmptyContentView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -142,6 +149,7 @@
 		638E3EED2C6EAED30015B0A3 /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				6358580F2C6F9F8E003D496F /* EmptyContentView */,
 				638E3EEE2C6EAED50015B0A3 /* NetworkImageView */,
 			);
 			path = Core;

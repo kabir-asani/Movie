@@ -36,7 +36,7 @@ class HomeViewController: UIViewController {
 				layoutSize: groupSize,
 				subitems: [item]
 			)
-			group.interItemSpacing = .fixed(8.0)
+			group.interItemSpacing = .fixed(16.0)
 			
 			// SECTION
 			let section = NSCollectionLayoutSection(
@@ -44,10 +44,10 @@ class HomeViewController: UIViewController {
 			)
 			section.interGroupSpacing = 16.0
 			section.contentInsets = NSDirectionalEdgeInsets(
-				top: 8.0,
-				leading: 8.0,
-				bottom: 8.0,
-				trailing: 8.0
+				top: 16.0,
+				leading: 16.0,
+				bottom: 16.0,
+				trailing: 16.0
 			)
 			
 			// LAYOUT
@@ -57,20 +57,26 @@ class HomeViewController: UIViewController {
 		}()
 	)
 	private lazy var searchResultsCollectionViewDataSource: UICollectionViewDiffableDataSource<Int, SearchItemModel> = {
-		return UICollectionViewDiffableDataSource(
+		let dataSource = UICollectionViewDiffableDataSource<Int, SearchItemModel>(
 			collectionView: searchResultsCollectionView
 		) { collectionView, indexPath, searchItem in
 			guard let searchItemCollectionViewCell = collectionView.dequeueReusableCell(
 				withReuseIdentifier: SearchItemCollectionViewCell.reuseIdentifier,
 				for: indexPath
 			) as? SearchItemCollectionViewCell else {
-				fatalError("Unable to dequeue UICollectionViewCell with identitifier: \(SearchItemCollectionViewCell.reuseIdentifier)")
+				fatalError("Unable to dequeue SearchItemCollectionViewCell with identitifier: \(SearchItemCollectionViewCell.reuseIdentifier)")
 			}
 			
 			searchItemCollectionViewCell.configure(with: searchItem)
 			
 			return searchItemCollectionViewCell
 		}
+		
+		var snapshot = NSDiffableDataSourceSnapshot<Int, SearchItemModel>()
+		snapshot.appendSections([0])
+		dataSource.apply(snapshot)
+		
+		return dataSource
 	}()
 	
 	override func viewDidLoad() {
@@ -81,6 +87,7 @@ class HomeViewController: UIViewController {
 	
 	private func configure() {
 		configureNavigationBar()
+		
 		configureView()
 		configureSearchResultsCollectionView()
 		configureActivityIndicatorView()
@@ -92,20 +99,15 @@ class HomeViewController: UIViewController {
 	private func configureNavigationBar() {
 		title = "Movie"
 		definesPresentationContext = true
-		navigationController?.navigationBar.isOpaque = true
 		
-		configureNavigationItem()
-	}
-	
-	private func configureNavigationItem() {
 		let searchController = UISearchController()
 		searchController.searchResultsUpdater = self
 		searchController.searchBar.delegate = self
 		searchController.searchBar.placeholder = "Search movies"
-		
+
 		navigationItem.searchController = searchController
 		navigationItem.hidesSearchBarWhenScrolling = false
-		navigationItem.backButtonTitle = " "
+		navigationItem.backButtonTitle = "Search"
 	}
 	
 	private func configureView() {
@@ -123,19 +125,20 @@ class HomeViewController: UIViewController {
 	}
 	
 	private func configureSearchResultsCollectionView() {
-		searchResultsCollectionView.addAsSubview(of: view)
-		searchResultsCollectionView.pin(to: view)
+		searchResultsCollectionView.scrollsToTop = true
+		searchResultsCollectionView.backgroundColor = .systemBackground
+		searchResultsCollectionView.keyboardDismissMode = .onDrag
 		
 		searchResultsCollectionView.register(
 			SearchItemCollectionViewCell.self,
 			forCellWithReuseIdentifier: SearchItemCollectionViewCell.reuseIdentifier
 		)
-		
 		searchResultsCollectionView.dataSource = searchResultsCollectionViewDataSource
 		searchResultsCollectionView.delegate = self
 		
-		searchResultsCollectionView.backgroundColor = .systemBackground
-		searchResultsCollectionView.keyboardDismissMode = .onDrag
+		
+		searchResultsCollectionView.addAsSubview(of: view)
+		searchResultsCollectionView.pin(to: view)
 	}
 }
 
@@ -248,7 +251,7 @@ extension HomeViewController {
 		snapshot.appendSections([0])
 		snapshot.appendItems([])
 		
-		searchResultsCollectionViewDataSource.apply(snapshot) {
+		searchResultsCollectionViewDataSource.applySnapshotUsingReloadData(snapshot) {
 			completion?()
 		}
 	}
@@ -259,9 +262,9 @@ extension HomeViewController {
 	) {
 		var snapshot = NSDiffableDataSourceSnapshot<Int, SearchItemModel>()
 		snapshot.appendSections([0])
-		snapshot.appendItems(search.results)
+		snapshot.appendItems(search.items)
 		
-		searchResultsCollectionViewDataSource.apply(snapshot) {
+		searchResultsCollectionViewDataSource.applySnapshotUsingReloadData(snapshot) {
 			completion?()
 		}
 	}
@@ -271,9 +274,12 @@ extension HomeViewController {
 		completion: (() -> Void)? = nil
 	) {
 		var snapshot = searchResultsCollectionViewDataSource.snapshot()
-		snapshot.appendItems(snapshot.itemIdentifiers(inSection: 0) + search.results)
+		snapshot.appendItems(search.items, toSection: 0)
 		
-		searchResultsCollectionViewDataSource.apply(snapshot, animatingDifferences: false) {
+		searchResultsCollectionViewDataSource.apply(
+			snapshot,
+			animatingDifferences: false
+		) {
 			completion?()
 		}
 	}
@@ -312,14 +318,15 @@ extension HomeViewController {
 						
 						displaySearchResultsCollectionView()
 						
-						searchResultsCollectionView.scrollToItem(
-							at: .init(
-								item: 0,
-								section: 0
-							),
-							at: .top,
-							animated: true
-						)
+						let snapshot = searchResultsCollectionViewDataSource.snapshot()
+						
+						if snapshot.numberOfSections > 0 && snapshot.numberOfItems > 0 {
+							searchResultsCollectionView.scrollToItem(
+								at: .init(item: 0, section: 0),
+								at: .centeredVertically,
+								animated: true
+							)
+						}
 					}
 				}
 			case .failure(_):

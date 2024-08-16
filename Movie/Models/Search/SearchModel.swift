@@ -8,7 +8,7 @@
 import Foundation
 
 struct SearchModel: Codable {
-	let results: [SearchItemModel]
+	let items: [SearchItemModel]
 	let count: Int
 	
 	var maximumNumberOfPages: Int {
@@ -16,10 +16,10 @@ struct SearchModel: Codable {
 	}
 	
 	init(
-		matches: [SearchItemModel],
+		items: [SearchItemModel],
 		count: Int
 	) {
-		self.results = matches
+		self.items = items
 		self.count = count
 	}
 	
@@ -29,9 +29,9 @@ struct SearchModel: Codable {
 		let container = try decoder.container(
 			keyedBy: CodingKeys.self
 		)
-		self.results = try container.decode(
+		self.items = try container.decode(
 			[SearchItemModel].self, 
-			forKey: .results
+			forKey: .items
 		)
 		
 		let totalResults = try container.decode(
@@ -51,7 +51,7 @@ struct SearchModel: Codable {
 	}
 	
 	enum CodingKeys: String, CodingKey {
-		case results = "Search"
+		case items = "Search"
 		case count = "totalResults"
 	}
 }

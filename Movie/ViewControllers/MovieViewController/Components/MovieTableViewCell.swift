@@ -16,6 +16,7 @@ class MovieTableViewCell: UITableViewCell {
 	private let posterImageView: NetworkImageView = NetworkImageView()
 	private let titleLabel: UILabel = UILabel()
 	private let subtitleLabel: UILabel = UILabel()
+	private let separatorView: UIView = UIView()
 	private let plotLabel: UILabel = UILabel()
 	
 	override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -34,6 +35,7 @@ class MovieTableViewCell: UITableViewCell {
 		configurePosterImageView()
 		configureTitleLabel()
 		configureSubtitleLabel()
+		configureSeparatorView()
 		configurePlotLabel()
 	}
 	
@@ -49,20 +51,22 @@ class MovieTableViewCell: UITableViewCell {
 		containerStackView.addArrangedSubview(posterImageView)
 		containerStackView.addArrangedSubview(titleLabel)
 		containerStackView.addArrangedSubview(subtitleLabel)
+		containerStackView.addArrangedSubview(separatorView)
 		containerStackView.addArrangedSubview(plotLabel)
 		
 		containerStackView.setCustomSpacing(12.0, after: posterImageView)
 		containerStackView.setCustomSpacing(4.0, after: titleLabel)
 		containerStackView.setCustomSpacing(16.0, after: subtitleLabel)
+		containerStackView.setCustomSpacing(16.0, after: separatorView)
 		
 		containerStackView.addAsSubview(of: contentView)
 		containerStackView.pin(
 			to: contentView,
 			withInsets: .init(
-				top: 8, 
-				left: 8, 
-				bottom: -8, 
-				right: -8
+				top: 12,
+				left: 12,
+				bottom: -12,
+				right: -12
 			)
 		)
 	}
@@ -97,6 +101,12 @@ class MovieTableViewCell: UITableViewCell {
 		subtitleLabel.textColor = .secondaryLabel
 	}
 	
+	private func configureSeparatorView() {
+		separatorView.backgroundColor = .separator
+		separatorView.fixHeight(to: 1.0)
+		separatorView.fixWidth(to: 64.0)
+	}
+	
 	private func configurePlotLabel() {
 		plotLabel.numberOfLines = 0
 		plotLabel.textAlignment = .center
@@ -111,7 +121,7 @@ extension MovieTableViewCell {
 	func configure(withMovie movie: MovieModel) {
 		posterImageView.configure(withURL: movie.poster)
 		titleLabel.text = movie.title
-		subtitleLabel.text = "Directed by \(movie.director) • Released on \(movie.releaseDate?.monthYear ?? "Unknown")"
+		subtitleLabel.text = "Directed by \(movie.director) • Released on \(movie.releaseDate)"
 		plotLabel.text = movie.plot
 	}
 	

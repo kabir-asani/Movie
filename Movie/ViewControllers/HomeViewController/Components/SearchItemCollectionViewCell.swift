@@ -13,7 +13,7 @@ class SearchItemCollectionViewCell: UICollectionViewCell {
 	}
 	
 	private let posterImageView: NetworkImageView = NetworkImageView()
-	private let titleContainerEffectView: UIVisualEffectView = UIVisualEffectView()
+	private let gradientView: UIView = UIView()
 	private let titleLabel: UILabel = UILabel()
 	
 	override init(frame: CGRect) {
@@ -29,49 +29,55 @@ class SearchItemCollectionViewCell: UICollectionViewCell {
 	private func configure() {
 		configureContentView()
 		configurePosterImageView()
-		configureTitleContainerEffectView()
+		configureGradientView()
 		configureTitleLabel()
 	}
 	
 	private func configureContentView() {
 		contentView.clipsToBounds = true
 		contentView.layer.cornerRadius = 8.0
-		contentView.layer.borderWidth = 1.0
+		contentView.layer.borderWidth = 2.0
 		contentView.layer.borderColor = UIColor.separator.cgColor
 	}
 	
 	private func configurePosterImageView() {
-		contentView.addSubview(posterImageView)
-		posterImageView.pin(to: contentView)
 		posterImageView.clipsToBounds = true
 		posterImageView.imageView.contentMode = .scaleAspectFill
+		
+		posterImageView.addAsSubview(of: contentView)
+		posterImageView.pin(to: contentView)
 	}
 	
-	private func configureTitleContainerEffectView() {
-		contentView.addSubview(titleContainerEffectView)
-		titleContainerEffectView.pin(toLeftOf: contentView)
-		titleContainerEffectView.pin(toRightOf: contentView)
-		titleContainerEffectView.pin(toBottomOf: contentView)
+	private func configureGradientView() {
+		gradientView.addAsSubview(of: contentView)
+		gradientView.pin(
+			to: contentView,
+			withInsets: .init(
+				top: 40,
+				left: 0,
+				bottom: 0,
+				right: 0
+			)
+		)
+		gradientView.backgroundColor = .clear
 		
-		titleContainerEffectView.clipsToBounds = true
-		titleContainerEffectView.effect = UIBlurEffect(style: .systemThinMaterial)
+		let gradientLayer = CAGradientLayer()
+		gradientLayer.colors = [UIColor.clear.cgColor, UIColor.black.cgColor]
+		gradientLayer.locations = [0.0, 1.0]
+		gradientLayer.frame = contentView.bounds
+		gradientView.layer.addSublayer(gradientLayer)
 	}
 	
 	private func configureTitleLabel() {
-		titleContainerEffectView.contentView.addSubview(titleLabel)
-		titleLabel.pin(
-			to: titleContainerEffectView.contentView,
-			withInsets: .init(
-				top: 8.0,
-				left: 8.0,
-				bottom: -8.0,
-				right: -8.0
-			)
-		)
+		titleLabel.addAsSubview(of: contentView)
+		titleLabel.pin(toLeftOf: contentView, withInset: 12)
+		titleLabel.pin(toRightOf: contentView, withInset: -12)
+		titleLabel.pin(toBottomOf: contentView, withInset: -12)
 		
-		titleLabel.numberOfLines = 1
+		titleLabel.numberOfLines = 0
 		titleLabel.lineBreakMode = .byTruncatingTail
-		titleLabel.font = .preferredFont(forTextStyle: .subheadline)
+		titleLabel.textColor = .white
+		titleLabel.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .subheadline).pointSize, weight: .semibold)
 	}
 }
 
