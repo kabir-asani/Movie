@@ -178,6 +178,13 @@ extension HomeViewController: UICollectionViewDelegate {
 			at: indexPath,
 			animated: true
 		)
+		
+		let item = searchResultsCollectionViewDataSource.snapshot().itemIdentifiers[indexPath.item]
+		
+		navigationController?.pushViewController(
+			MovieViewController(movieId: item.id),
+			animated: true
+		)
 	}
 }
 
@@ -359,16 +366,12 @@ extension HomeViewController {
 			return .failure(.unknown)
 		}
 		
-		guard let url = URL(string: "https://www.omdbapi.com?apikey=\(omdbAPIKey)&s=\(searchText)&page=\(page	)") else {
+		guard let url = URL(string: "https://www.omdbapi.com?apikey=\(omdbAPIKey)&s=\(searchText)&page=\(page)") else {
 			return .failure(.unknown)
 		}
 		
 		do {
 			let (data, _) = try await URLSession.shared.data(from: url)
-			
-			if let json = String(data: data, encoding: .utf8) {
-				print(json)
-			}
 			
 			let decoder = JSONDecoder()
 			
