@@ -228,7 +228,7 @@ extension HomeViewController {
 	}
 	
 	private func displayEmptyContentView(
-		withImage: UIImage,
+		withImage image: UIImage,
 		title: String
 	) {
 		searchResultsCollectionView.hide()
@@ -237,8 +237,8 @@ extension HomeViewController {
 		emptyContentView.show()
 		
 		emptyContentView.configure(
-			withImage: UIImage(systemName: "magnifyingglass")!,
-			title: "Search for any movies"
+			withImage: image,
+			title: title
 		)
 	}
 }

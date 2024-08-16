@@ -44,6 +44,17 @@ class MovieTableViewCell: UITableViewCell {
 	}
 	
 	private func configureContainerStackView() {
+		containerStackView.addAsSubview(of: contentView)
+		containerStackView.pin(
+			to: contentView,
+			withInsets: .init(
+				top: 12,
+				left: 12,
+				bottom: -12,
+				right: -12
+			)
+		)
+		
 		containerStackView.axis = .vertical
 		containerStackView.alignment = .center
 		containerStackView.distribution = .fill
@@ -58,28 +69,17 @@ class MovieTableViewCell: UITableViewCell {
 		containerStackView.setCustomSpacing(4.0, after: titleLabel)
 		containerStackView.setCustomSpacing(16.0, after: subtitleLabel)
 		containerStackView.setCustomSpacing(16.0, after: separatorView)
-		
-		containerStackView.addAsSubview(of: contentView)
-		containerStackView.pin(
-			to: contentView,
-			withInsets: .init(
-				top: 12,
-				left: 12,
-				bottom: -12,
-				right: -12
-			)
-		)
 	}
 	
 	private func configurePosterImageView() {
+		posterImageView.fixHeight(to: 240)
+		posterImageView.fixWidth(to: 150)
+		
 		posterImageView.imageView.contentMode = .scaleAspectFill
 		posterImageView.clipsToBounds = true
 		posterImageView.layer.cornerRadius = 8.0
 		posterImageView.layer.borderWidth = 1.0
 		posterImageView.layer.borderColor = UIColor.separator.cgColor
-		
-		posterImageView.fixHeight(to: 240)
-		posterImageView.fixWidth(to: 150)
 	}
 	
 	private func configureTitleLabel() {
@@ -102,9 +102,10 @@ class MovieTableViewCell: UITableViewCell {
 	}
 	
 	private func configureSeparatorView() {
-		separatorView.backgroundColor = .separator
 		separatorView.fixHeight(to: 1.0)
 		separatorView.fixWidth(to: 64.0)
+		
+		separatorView.backgroundColor = .separator
 	}
 	
 	private func configurePlotLabel() {
@@ -132,12 +133,3 @@ extension MovieTableViewCell {
 		plotLabel.text = nil
 	}
 }
-
-extension Date {
-	var monthYear: String {
-		let dateFormatter = DateFormatter()
-		dateFormatter.dateFormat = "MMMM yyyy"
-		return dateFormatter.string(from: self)
-	}
-}
-

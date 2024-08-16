@@ -67,9 +67,13 @@ class MovieViewController: UIViewController {
 	}
 	
 	private func configureTableView() {
+		tableView.addAsSubview(of: view)
+		tableView.pin(to: view)
+		
 		tableView.rowHeight = UITableView.automaticDimension
 		tableView.estimatedRowHeight = 400
 		tableView.allowsSelection = false
+		tableView.separatorStyle = .none
 		
 		tableView.dataSource = self
 		tableView.delegate = self
@@ -77,10 +81,6 @@ class MovieViewController: UIViewController {
 			MovieTableViewCell.self, 
 			forCellReuseIdentifier: MovieTableViewCell.reuseIdentifier
 		)
-		tableView.separatorStyle = .none
-		
-		tableView.addAsSubview(of: view)
-		tableView.pin(to: view)
 	}
 	
 	private func configureErrorContentView() {
@@ -150,7 +150,6 @@ extension MovieViewController {
 			
 			state = .data(movie: movie)
 		} catch {
-			print(error)
 			state = .error
 		}
 	}
