@@ -6,8 +6,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/kabir-asani/Silicon.git",
       "state" : {
-        "revision" : "bdaad45095e4e3f08ec02b2d7f25ca4e3e1f597b",
-        "version" : "0.0.3"
+        "revision" : "feca6003a76723677abaeb4547462a9bec0ef5d8",
+        "version" : "0.0.4"
       }
     }
   ],
