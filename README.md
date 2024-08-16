@@ -10,7 +10,20 @@ A simple Movie database application
 
 # Build/Run Steps
 
-1. Add a `Config.xcconfig` file as per this [article](https://medium.com/swift-india/secure-secrets-in-ios-app-9f66085800b4). All other configurations are done, you just have to add the `Config.xcconfig` file with `OMDB_API_KEY = <your-omdb-api-key>` to this project's instance on your XCode.
+1. Add a `Configuration.swift` file under the `Extras` folder and add a single variable called `omdbAPIKey`.
+
+```
+Movie/
+    Extras/
+        Configuration.swift <- Add this file
+...
+```
+
+```swift
+// Add this variable inside Configuration.swift and replace with your API key
+let omdbAPIKey = "your-api-key"
+```
+
 2. Build/run as usual.
 
 # Assumptions
@@ -20,5 +33,6 @@ A simple Movie database application
 -   No extensive architecture is needed for an app of this scale. Going ahead with the conventional MVC architecture as promoted by Apple.
 
 # Screenshots
+
 ![image](https://github.com/user-attachments/assets/aea35597-b237-4365-b7c8-78ba3e250c1d)
 ![image](https://github.com/user-attachments/assets/465199a2-2725-40bc-b340-22c9326a635a)
