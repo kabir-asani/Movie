@@ -79,7 +79,7 @@ class MovieTableViewCell: UITableViewCell {
 		posterImageView.layer.borderColor = UIColor.separator.cgColor
 		
 		posterImageView.fixHeight(to: 240)
-		posterImageView.fixWidth(to: 130)
+		posterImageView.fixWidth(to: 150)
 	}
 	
 	private func configureTitleLabel() {
