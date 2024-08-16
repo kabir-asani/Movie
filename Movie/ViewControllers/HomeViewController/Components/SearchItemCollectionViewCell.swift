@@ -36,17 +36,16 @@ class SearchItemCollectionViewCell: UICollectionViewCell {
 	private func configureContentView() {
 		contentView.clipsToBounds = true
 		contentView.layer.cornerRadius = 8.0
+		contentView.layer.cornerRadius = 8.0
+		contentView.layer.borderWidth = 1.0
+		contentView.layer.borderColor = UIColor.separator.cgColor
 	}
 	
 	private func configurePosterImageView() {
 		contentView.addSubview(posterImageView)
 		posterImageView.pin(to: contentView)
 		posterImageView.clipsToBounds = true
-		posterImageView.fixHeight(to: 220)
 		posterImageView.imageView.contentMode = .scaleAspectFill
-		posterImageView.layer.cornerRadius = 8.0
-		posterImageView.layer.borderWidth = 1.0
-		posterImageView.layer.borderColor = UIColor.separator.cgColor
 	}
 	
 	private func configureTitleContainerEffectView() {
@@ -64,7 +63,7 @@ class SearchItemCollectionViewCell: UICollectionViewCell {
 		titleLabel.pin(
 			to: titleContainerEffectView.contentView,
 			withInsets: .init(
-				top: 8.0, 
+				top: 8.0,
 				left: 8.0,
 				bottom: -8.0,
 				right: -8.0
@@ -81,5 +80,10 @@ extension SearchItemCollectionViewCell {
 	func configure(with searchItem: SearchItemModel) {
 		posterImageView.configure(withURL: searchItem.poster)
 		titleLabel.text = searchItem.title
+	}
+	
+	override func prepareForReuse() {
+		posterImageView.prepareForReuse()
+		titleLabel.text = nil
 	}
 }
