@@ -11,14 +11,25 @@ import Silicon
 class NetworkImageView: UIView {
 	private static let imageCache = NSCache<NSURL, UIImage>()
 	
-	let url: URL
+	static func precache(imageWithURL url: URL) {
+		URLSession.shared.dataTask(with: url) { data, response, error in
+			if error != nil {
+				return
+			}
+			
+			if let data = data, let image = UIImage(data: data) {
+				Self.imageCache.setObject(
+					image,
+					forKey: url as NSURL
+				)
+			}
+		}.resume()
+	}
+	
 	let imageView = UIImageView()
 	let activityIndicatorView = UIActivityIndicatorView()
 	
-	init(
-		url: URL
-	) {
-		self.url = url
+	init() {
 		super.init(frame: .zero)
 		
 		configure()
@@ -34,8 +45,6 @@ class NetworkImageView: UIView {
 		configureSelf()
 		configureImageView()
 		configureActivityIndicatorView()
-		
-		loadImageFromNetwork()
 	}
 	
 	private func configureSelf() {
@@ -54,7 +63,7 @@ class NetworkImageView: UIView {
 		activityIndicatorView.pin(to: self)
 	}
 	
-	private func loadImageFromNetwork() {
+	func configure(withURL url: URL) {
 		if let cachedImage = Self.imageCache.object(forKey: url as NSURL) {
 			self.imageView.image = cachedImage
 			return
@@ -79,7 +88,7 @@ class NetworkImageView: UIView {
 			if let data = data, let image = UIImage(data: data) {
 				Self.imageCache.setObject(
 					image,
-					forKey: self.url as NSURL
+					forKey: url as NSURL
 				)
 				
 				DispatchQueue.main.async {
